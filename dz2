@@ -1,0 +1,43 @@
+# https://rozetka.com.ua/dacha-sad-ogorod/c2394297/ - вводные данные
+title = 'Дача, сад, огород - Rozetka.ua |'\
+        'Купить Дача, сад, огород в Киеве: цена, отзывы, продажа'
+description = 'Дача, сад, огород в интернет-магазине ➦ Rozetka.ua.'\
+              '☎: (044) 537-02-22, 0 (800) 303-344. Дача, сад,'\
+              ' огород, $ лучшие цены, ✈ быстрая доставка, ☑ гарантия!'
+h1 = 'Дача, сад, огород'
+keyword = 'Дача, сад, огород'
+keywordmain = 'сад' #наше ключевое слово
+#преобразование в список
+tlin_all = [title.split(), description.split(), h1.split()]
+
+#Затем нужно определить количество символов и количество слов в url, title, description, h1.
+tdh_len = [len(title), len(description), len(h1), ]
+#Определить количество вхождений ключевого слова в title, description, h1.
+tl_count = [title.count(keywordmain), 
+            description.count(keywordmain), 
+            h1.count(keywordmain)]
+#Определить плотность ключевого слова в процентах в title, description, h1.
+plot_tl = [((tl_count[0] / len(tlin_all[0]))*100), 
+           ((tl_count[1] / len(tlin_all[1]))*100), 
+           ((tl_count[2] / len(tlin_all[2]))*100)]
+#Всю информацию вывести в консоль в красивом виде.
+print ("Количество символов title:",tdh_len[0],
+       "Количество символов Description:",tdh_len[1],
+       "Количество символов H1:",tdh_len[2])
+print ("Ключей в Title:",tl_count[0],
+       "Ключей в description:",tl_count[1],
+       "Ключей в h1:",tl_count[2])
+print ("Плотность ключевого слова в Title:",round(plot_tl[0]),"%",
+       "Плотность ключевого слова в Description:",round(plot_tl[1]),"%",
+       "Плотность ключевого слова в H1:",round(plot_tl[2]),"%")
+#Добавь в этот скрипт еще и определение количества уникальных слов (используя тип set).
+titleset = tlin_all[0]
+descripset = tlin_all[1]
+h1set = tlin_all[2]
+print ("Количетсво уникальных слов Title:", len(set(titleset)))
+print ("Количетсво уникальных слов Description:", len(set(descripset)))
+print ("Количетсво уникальных слов H1:", len(set(h1set)))
+#Все параметры, которые мы рассчитали, запиши в один большой словарь с вложенной структурой.
+#Структуру сделай на свое усмотрение. И потом, обращаясь к элементам словаря по ключам, выведи на экран 
+#нужное значение.
+
