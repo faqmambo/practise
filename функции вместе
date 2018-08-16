@@ -1,0 +1,41 @@
+from pprint import pprint
+from requests_html import HTMLSession
+
+def get_api(method, token, query, se):
+
+    session = HTMLSession()
+
+    api_url = f'http://api.serpstat.com/v3/{method}?query={query}&se={se}&token={token}&order=desc&sort=organic_keywords'
+
+    response = session.get(api_url)
+
+    return response.json()
+
+def keywords(query, token):
+    data = get_api('keywords', token, query, 'g_ua')
+
+    result = []
+    for x in data['result']['hits']:
+        key = x.get('keyword')
+        chast = x.get('region_queries_count')
+        result.append((key, chast))
+    return result    
+
+def potential_trafic(query, token):
+
+    data = get_api('get_top_urls', token, query, 'g_ua')
+
+    top_pages = []
+    for x in data['result']['hits']:
+        site_url = x.get('url')
+        org_key = x.get('organic_keywords')
+        pot_traf = x.get('potencial_traff')
+        top_pages.append((site_url, org_key, pot_traf))
+    return top_pages
+
+while True:
+    query = input("Введите ваше ключевое слово или 'exit' чтобы выйти: ")
+    if query == 'exit':
+        break
+    token = 'b148bab34809364451a37e14917678d8'   
+    pprint (keywords(query, token))
