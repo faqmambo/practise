@@ -1,0 +1,29 @@
+from pprint import pprint
+from requests_html import HTMLSession
+#покажет топ-100 пока что
+
+def keywords(key):
+    token = 'ваш токен'
+
+    session = HTMLSession()
+
+    se = 'g_ua'
+
+    api_url = f'http://api.serpstat.com/v3/keywords?query={key}&token={token}&se={se}'
+
+    response = session.get(api_url)
+
+    data = response.json()
+    result = []
+    for x in data['result']['hits']:
+        key = x.get('keyword')
+        chast = x.get('region_queries_count')
+        result.append((key, chast))
+    return result    
+
+
+while True:
+    key = input("Введите ваше ключевое слово или 'exit' чтобы выйти: ")
+    if key == 'exit':
+        break
+    pprint (keywords(key))
