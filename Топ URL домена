@@ -1,0 +1,30 @@
+from pprint import pprint
+from requests_html import HTMLSession
+
+def potential_trafic(domain):
+    token = 'введи токен'
+
+    session = HTMLSession()
+
+    se = 'g_ua'
+
+    api_url = f'http://api.serpstat.com/v3/get_top_urls?query={domain}&se={se}&token={token}&order=desc&sort=organic_keywords'
+
+    response = session.get(api_url)
+
+    data = response.json()
+
+    top_pages = []
+    for x in data['result']['hits']:
+        site_url = x.get('url')
+        org_key = x.get('organic_keywords')
+        pot_traf = x.get('potencial_traff')
+        top_pages.append((site_url, org_key, pot_traf))
+    return top_pages
+
+
+while True:
+    domain = input('Введите ваш домен: ')
+    if domain == 'exit':
+        break
+    pprint (potential_trafic(domain))
