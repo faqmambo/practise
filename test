@@ -1,47 +1,31 @@
+# -*- coding: utf-8 -*-
+
 from pprint import pprint
 from requests_html import HTMLSession
 import csv
 import re
 
 session = HTMLSession()
-links = []
+dictResult = dict()
+
 
 def get_dom():
-    domain = input("Введите ваше ключевое слово или 'exit' чтобы выйти: ")
-    links = fun1(domain)
-        
+    domain = input("Введите домен:")
+    fun1(domain)
+    csv_writer(dictResult)
     return
-
-def fun2(list):
-    for url in list:
-        if 'http' in url:
-            fun1(url)    
-    return
-
 
 def  fun1(url):
-    print ('Я зашел в fun1: ')
-    if fun3(url) == True :
-        response = session.get(url)    
-        links = get_meta(response, '//a/@href')
-        print ('Я получаю URL:', url)
-        title = get_meta(response, '//title/text()')
-        print('Я получаю Title:', title[0])
-        #result_meta.append([url, title])
-        csv_writer(url, title[0])
-        fun2(links)
+    if(len(dictResult)<5):
+        if url not in dictResult:
+            response = session.get(url)    
+            links = get_meta(response, '//a/@href')
+            title = get_meta(response, '//title/text()')
+            dictResult[url] = title[0]
+            for url in links:
+                if 'http' in url:
+                    fun1(url)    
     return
-
-
-def  fun3(url):
-    print("Я зашел в функцию 3:")
-    # проверяем есть ли такой урл в csv
-    list = csv_reader()
-    print (list)
-    if list.count (url) == 0:
-        return True
-    return False
-
 
 def get_meta(response, xpath):
     print('Я получаю get_meta:')
@@ -49,27 +33,12 @@ def get_meta(response, xpath):
     return result
 
 
-def csv_writer(url, title):
-    with open('spis.csv', 'a', newline='', encoding='utf-8') as csvfile:
-        fieldnames = ['first_name', 'last_name']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        writer.writeheader()
-        writer.writerow({'first_name': url, 'last_name': title})
-    return
-
-
-def csv_reader():
-    spis = []
-    #try:
-    with open('spis.csv', "r") as f_obj:
-        reader = csv.reader(f_obj)
-        for row in reader:
-            spis.append(row[0])
-    #except:
-        #print("Ошибка индекса списка")
-    return spis
-            
+def csv_writer(resulr):
+    with open('qwe.csv', 'a', newline='', encoding='utf-8') as csvfile:
+        spamWriter = csv.writer(csvfile, delimiter=' ', quotechar=';', quoting=csv.QUOTE_MINIMAL)
+        for key, value in resulr.items():
+            spamWriter.writerow([key, value])
+    return         
 
 
 if __name__ == '__main__':
