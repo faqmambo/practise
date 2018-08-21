@@ -1,43 +1,75 @@
 from pprint import pprint
 from requests_html import HTMLSession
 import csv
+import re
+
+session = HTMLSession()
+links = []
 
 def get_dom():
-    session = HTMLSession()
-    result_meta = []
-    fieldnames = [['URL', 'Title']]
-    while True:
-        domain = input("Введите ваше ключевое слово или 'exit' чтобы выйти: ")
-        if domain == 'exit':
-            break
-        response = session.get(domain)    
-        links = get_meta(response, '//a/@href')
-        title = get_meta(response, '/html/head/title')
-        result_meta.append([domain, title])
-        for url in links:
-            response = session.get(url)    
-            links = get_meta(response, '//a/@href')
-            title = get_meta(response, '/html/head/title')
-            result_meta.append([url, title])   
+    domain = input("Введите ваше ключевое слово или 'exit' чтобы выйти: ")
+    links = fun1(domain)
+        
+    return
+
+def fun2(list):
+    for url in list:
+        if 'http' in url:
+            fun1(url)    
     return
 
 
-def  get_all_url()
+def  fun1(url):
+    print ('Я зашел в fun1: ')
+    if fun3(url) == True :
+        response = session.get(url)    
+        links = get_meta(response, '//a/@href')
+        print ('Я получаю URL:', url)
+        title = get_meta(response, '//title/text()')
+        print('Я получаю Title:', title[0])
+        #result_meta.append([url, title])
+        csv_writer(url, title[0])
+        fun2(links)
+    return
 
-def csv_writer(path, fieldnames, data):
-    with open(path, "w", newline='') as out_file:
-        writer = csv.DictWriter(out_file, delimiter=';', fieldnames=fieldnames)
-        writer.writeheader()
-        for row in data:
-            writer.writerow(row)
+
+def  fun3(url):
+    print("Я зашел в функцию 3:")
+    # проверяем есть ли такой урл в csv
+    list = csv_reader()
+    print (list)
+    if list.count (url) == 0:
+        return True
+    return False
 
 
 def get_meta(response, xpath):
-    result = response.html.xpath('//a/@href')
+    print('Я получаю get_meta:')
+    result = response.html.xpath(xpath)
     return result
 
 
+def csv_writer(url, title):
+    with open('spis.csv', 'a', newline='', encoding='utf-8') as csvfile:
+        fieldnames = ['first_name', 'last_name']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
+        writer.writeheader()
+        writer.writerow({'first_name': url, 'last_name': title})
+    return
+
+
+def csv_reader():
+    spis = []
+    #try:
+    with open('spis.csv', "r") as f_obj:
+        reader = csv.reader(f_obj)
+        for row in reader:
+            spis.append(row[0])
+    #except:
+        #print("Ошибка индекса списка")
+    return spis
+            
 
 
 if __name__ == '__main__':
