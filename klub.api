@@ -1,0 +1,30 @@
+from pprint import pprint
+from requests_html import HTMLSession
+import csv
+import re
+#получение всех брендов в категории : кол-ва обьяв и тд
+
+session = HTMLSession()
+
+cat = input('Введите нужное id:')
+api_url = f'https://klubok.com/api/get-brands?cat_id={cat}'
+
+response = session.get(api_url)
+
+data = response.json()
+result = []
+for x in data:
+    brand = x.get('brand_id')
+    name = x.get('name')
+    link = x.get('link')
+    obyav = x.get('count_all')
+    result.append[brand, name, link, obyav]
+pprint(result)
+
+def csv_writer(resulr):
+    with open('spis.csv', 'a', newline='', encoding='utf-8') as csvfile:
+        spamWriter = csv.writer(csvfile, delimiter=' ', quotechar=';', quoting=csv.QUOTE_MINIMAL)
+        for value in resulr.items():
+            spamWriter.writerow(value)
+    return         
+csv_writer(result)
